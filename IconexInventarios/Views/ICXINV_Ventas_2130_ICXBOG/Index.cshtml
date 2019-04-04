@@ -1,0 +1,329 @@
+@using Mvc.HtmlHelpers
+@{
+    
+}  
+<script type="text/javascript">
+    function recalc_ICXINVVentas2130(e) {
+        var opeM = e.target.classList[0];
+        var master = $('#ICXINVVentas2130Grid');
+        
+	    master.jqGrid('setCellValue', 'ICXINVVentaPrecioTotal', ((Number(master.jqGrid('getCellValue', 'ICXINVVentaCantidad', opeM))) * Number(master.jqGrid('getCellValue', 'ICXINVVentaPrecioUnitario', opeM))).toFixed(2), opeM)
+    }
+
+    function beforeShowForm_ICXINVVentas2130(form) {
+        form = $(form);
+        $('tr', form).each(function() {
+            var inputs = $('>td.DataTD:has(input,select,textarea)',this);
+            if (inputs.length == 1) {
+                var tds = $('>td', this);
+                tds.eq(1).attr('colSpan', tds.length - 1);
+                tds.slice(2).hide();
+            }
+        });
+    }
+
+    function autocomplete_ICXINVVentas_ICXINVProductoDescripcion2130(elem){ 
+        $(elem).autocomplete({
+	        open: function () {
+	            $(this).autocomplete('widget').css('z-index', 99999);
+	            return false;
+	        },
+            source:  function (request, response) {
+                $.get('/ICXINV_Ventas_2130_ICXBOG/ICXINV_Productos/1',
+                    { 
+                        term: request.term.trim(), 
+                        column: 'ICXINVPRODUCTODESCRIPCION', 
+                        pageSize: 10 
+                    },
+                    function (data) { response(data); }
+                );
+		    },
+            select: function(event, ui){
+                if(ui.item){
+                    $(elem).val(ui.item.label);
+            		$('input#ICXINVProductoItemCode').val(ui.item.ICXINVProductoItemCode);
+            		$('input#ICXINVProductoCosto').val(ui.item.ICXINVProductoCosto);
+
+            		recalc_ICXINVVentas2130({target: {classList: ['FormElement']} });
+                }
+                return false;
+            },
+            minLength: 0
+
+        }).focus(function () {
+            $(this).select(); 
+			$(this).autocomplete('search');
+		});
+	}
+
+    function autocomplete_ICXINVVentas_ICXINVProductoCosto2130(elem){ 
+        $(elem).autocomplete({
+	        open: function () {
+	            $(this).autocomplete('widget').css('z-index', 99999);
+	            return false;
+	        },
+            source:  function (request, response) {
+                $.get('/ICXINV_Ventas_2130_ICXBOG/ICXINV_Productos/1',
+                    { 
+                        term: request.term.trim(), 
+                        column: 'ICXINVPRODUCTOCOSTO', 
+                        pageSize: 10 
+                    },
+                    function (data) { response(data); }
+                );
+		    },
+            select: function(event, ui){
+                if(ui.item){
+                    $(elem).val(ui.item.label);
+            		$('input#ICXINVProductoCosto').val(ui.item.ICXINVProductoCosto);
+
+            		recalc_ICXINVVentas2130({target: {classList: ['FormElement']} });
+                }
+                return false;
+            },
+            minLength: 0
+
+        }).focus(function () {
+            $(this).select(); 
+			$(this).autocomplete('search');
+		});
+	}
+
+
+//LastLine don't Move
+//# sourceURL=ICXINVVentas2130Recalc.js
+</script>
+@if(((bool?)Session["ArkeosFactory.Testing.ICXINV_Ventas_2130_ICXBOG"]??false) && !string.IsNullOrEmpty(ViewBag.SqlUpdate)){
+    <div style="color: green"><pre>@ViewBag.SqlUpdate</pre></div>
+}
+
+<div style="width: auto">
+@(Html.jqGrid("ICXINVVentas2130Grid")                                        
+//Columns
+		.addColumn(new Column("Compania")
+		 			.setLabel("Compania")
+		 			.setSortable(true)
+		 			//.setKey(true)
+		 			.setEditable(false)
+   					.setFormOptions("rowpos:99, colpos:1")
+		 			.setHidden(true))
+		 			
+        .addColumn(new Column("ICXINVVentaVentaID")
+						.setLabel("Venta I D!")
+                        .setSortable(true)
+                        //.setKey(true)
+   					    .setFormOptions("rowpos:1, colpos:1")
+						.setEditable(true)
+                        .setEditOptions(@"
+										readonly:true, 
+										defaultValue: function() { return 0; },")
+                        .setEditRules("integer:true, required: true")
+						.setAlign(Align.right)
+                        .setEditType(EditType.text)
+						.setSearchOptions("sopt:['eq','ne','lt','le','gt','ge'] ")
+						.setWidth(50))
+
+        .addColumn(new Column("ICXINVProductoItemCode")
+						.setLabel("Descripcion:")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:99, colpos:1")
+						.setHidden(true)
+						.setEditable(true)
+                        .setEditOptions(@"size:18,maxlength:18,")
+                        .setEditRules("required: true")
+						.setSearchOptions("sopt:['cn','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','cn','nc']")                         
+   					    .setWidth(180))
+
+        .addColumn(new Column("ICXINVProductoDescripcion")
+						.setLabel("Descripcion:")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:2, colpos:1")
+						.setEditable(true)
+                        .setEditOptions(@"size:45,maxlength:45,")
+                        .setEditRules("required: true")
+                        .setEditType(EditType.text)
+                        .setEditOptions(@"size: 45, 
+                                        dataInit: autocomplete_ICXINVVentas_ICXINVProductoDescripcion2130")
+						.setSearchOptions("sopt:['cn','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','cn','nc']")                         
+   					    .setWidth(400))
+
+        .addColumn(new Column("ICXINVVentaCantidad")
+						.setLabel("Cantidad:")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:3, colpos:1")
+						.setEditable(true)
+                        .setEditOptions(@"
+										defaultValue: function() { return 1; },
+	                                    dataEvents: [{  type: 'input', fn: recalc_ICXINVVentas2130 }]")
+                        .setEditRules("integer:true, required: true")
+						.setAlign(Align.right)
+                        .setEditType(EditType.text)
+						.setSearchOptions("sopt:['eq','ne','lt','le','gt','ge'] ")
+						.setWidth(20))
+
+        .addColumn(new Column("ICXINVVentaPrecioUnitario")
+						.setLabel("Precio Unitario:")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:3, colpos:2")
+						.setEditable(true)
+                        .setEditOptions(@"dataInit: function (element) { $(element).number(true, 2); },
+                                        style:'text-align: right', 
+										defaultValue: function() { return 0.0; },
+	                                    dataEvents: [{  type: 'input', fn: recalc_ICXINVVentas2130 }]")
+                        .setEditRules("number:true, required: true")
+						.setAlign(Align.right)
+						.setFormatter(Formatters.currency, "decimalSeparator:'.', thousandsSeparator: ',', decimalPlaces: 2, prefix: '$ '")
+                        .setEditType(EditType.text)
+                        .setSearchOptions("sopt:['eq','ne','lt','le','gt','ge'] ")
+						.setWidth(130))
+
+        .addColumn(new Column("ICXINVVentaPrecioTotal")
+						.setLabel("Precio Total=")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:4, colpos:1")
+						.setEditable(true)
+                        .setEditOptions(@"dataInit: function (element) { $(element).number(true, 2); },
+                                        style:'text-align: right', 
+										readonly:true, 
+										defaultValue: function() { return 0.0; },")
+                        .setEditRules("number:true, required: false")
+						.setAlign(Align.right)
+						.setFormatter(Formatters.currency, "decimalSeparator:'.', thousandsSeparator: ',', decimalPlaces: 2, prefix: '$ '")
+                        .setEditType(EditType.text)
+                        .setSearchOptions("sopt:['eq','ne','lt','le','gt','ge'] ")
+						.setWidth(130))
+
+        .addColumn(new Column("ICXINVProductoCosto")
+						.setLabel("Costo=")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:4, colpos:2")
+						.setEditable(true)
+                        .setEditOptions(@"dataInit: function (element) { $(element).number(true, 2); },
+                                        style:'text-align: right', 
+										readonly:true, 
+										defaultValue: function() { return 0.0; },")
+                        .setEditRules("number:true, required: false")
+						.setAlign(Align.right)
+						.setFormatter(Formatters.currency, "decimalSeparator:'.', thousandsSeparator: ',', decimalPlaces: 2, prefix: '$ '")
+                        .setEditType(EditType.text)
+                        .setSearchOptions("sopt:['eq','ne','lt','le','gt','ge'] ")
+						.setWidth(130))
+
+         .addColumn(new Column("Fecha_Impresion")
+                                .setLabel("Fecha_Impresion")
+                                .setSortable(true)
+                                .setEditable(false)
+            					.setSearchType(SearchType.datepicker)
+                                .setSearchDateFormat("yy-mm-dd H:i:s")
+                                .setDateFmt("Y-m-d H:i:s")
+                                .setFormatOptions("srcformat: 'ISO8601Long', newformat: 'Y-m-d H:i:s'")
+                                .setFormatter(Formatters.date)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+                                
+         .addColumn(new Column("Fecha_Reimpresion")
+                                .setLabel("Fecha_Reimpresion")
+                                .setSortable(true)
+                                .setEditable(false)
+            					.setSearchType(SearchType.datepicker)
+                                .setSearchDateFormat("yy-mm-dd H:i:s")
+                                .setDateFmt("Y-m-d H:i:s")
+                                .setFormatOptions("srcformat: 'ISO8601Long', newformat: 'y-m-d H:i:s'")
+                                .setFormatter(Formatters.date)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+                                
+          .addColumn(new Column("Fuente")
+		 			.setLabel("Fuente")
+		 			.setSortable(true)
+		 			.setEditable(false)
+		 			.setWidth(100))
+		 			
+          .addColumn(new Column("FuenteImport")
+		 			.setLabel("Import")
+		 			.setSortable(true)
+		 			.setEditable(false)
+		 			.setWidth(100))
+		 			
+ 		.addColumn(new Column("Proceso")
+		 			.setLabel("Proceso")
+		 			.setSortable(true)
+		 			.setEditable(false)
+   					.setFormOptions("rowpos:99, colpos:1")
+		 			.setHidden(true))
+		 			
+         .addColumn(new Column("Fecha_Computador")
+                                .setLabel("Fecha Computador")
+                                .setSortable(true)
+                                .setEditable(false)
+            					.setSearchType(SearchType.datepicker)
+                                .setSearchDateFormat("yy-mm-dd H:i:s")
+                                .setDateFmt("Y-m-d H:i:s")
+                                .setFormatOptions("srcformat: 'ISO8601Long', newformat: 'y-m-d H:i:s'")
+                                .setFormatter(Formatters.date)
+                                .setWidth(150))
+        
+         .addColumn(new Column("Usuario")
+                                .setLabel("Usuario")
+                                .setSortable(true)
+                                .setEditable(false)
+                                .setWidth(150))
+
+         .addColumn(new Column("Timestamp")
+                                .setLabel("Timestamp")
+                                .setSortable(true)
+                                .setEditable(false)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+
+         .addColumn(new Column("Secuencia")
+                                .setLabel("Secuencia")
+                                .setSortable(true)
+                                .setEditable(false)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+
+        // settings
+    	.setRequestType(RequestType.post)
+    	.setCaption("Ventas.ICXINV")
+        .setUrl(Url.Action("Search", "ICXINV_Ventas_2130_ICXBOG"))
+        .setEditUrl(Url.Action("CRUD", "ICXINV_Ventas_2130_ICXBOG"))
+        .setRowNum(10)
+	    .setRowList(new[] { 10, 15, 20, 50 })
+	    .setViewRecords(true)
+	    .setPager("pager_ICXINV_Ventas2130")
+	    .setSearchToolbar(true)
+        .setSearchOperators(true)
+	    .setSearchOnEnter(false)     
+        .setAutoWidth(true)
+        .setShrinkToFit(false)
+        .setPgButtons(true)
+        .setNavAdd(true)
+        .setNavSearch(true)
+        .setPrint(true)
+        .setExcelExport(Url.Action("Excel", "ICXINV_Ventas_2130_ICXBOG"))
+        .setPDFExport(Url.Action("PDF", "ICXINV_Ventas_2130_ICXBOG"))
+        .setAltRows(true)
+        .setAltClass("myAltRowClass")
+        .setEditDialogOptions(@"editCaption: 'Modificar Ventas.ICXINV', 
+        						width:900,
+        						recreateForm:true,
+                                beforeShowForm: beforeShowForm_ICXINVVentas2130"
+        )
+        .setAddDialogOptions(@"addCaption: 'Nuevo Ventas.ICXINV',
+        					 	width:900,
+        					 	recreateForm:true,
+                                beforeShowForm: beforeShowForm_ICXINVVentas2130"
+        )
+        .setSearchDialogOptions(@"closeOnEscape: true, 
+        						multipleSearch: true, 
+        						closeAfterSearch: true")        						
+
+        // render the html
+        .Render()
+)
+</div>

@@ -1,0 +1,210 @@
+@using Mvc.HtmlHelpers
+@{
+   
+}  
+<script type="text/javascript">
+    function recalc_ICXINVProductos2110(e) {
+        var opeM = e.target.classList[0];
+        var master = $('#ICXINVProductos2110Grid');
+        
+    }
+
+    function beforeShowForm_ICXINVProductos2110(form) {
+        form = $(form);
+        $('tr', form).each(function() {
+            var inputs = $('>td.DataTD:has(input,select,textarea)',this);
+            if (inputs.length == 1) {
+                var tds = $('>td', this);
+                tds.eq(1).attr('colSpan', tds.length - 1);
+                tds.slice(2).hide();
+            }
+        });
+    }
+
+
+//LastLine don't Move
+//# sourceURL=ICXINVProductos2110Recalc.js
+</script>
+@if(((bool?)Session["ArkeosFactory.Testing.ICXINV_Productos_2110_ICXBOG"]??false) && !string.IsNullOrEmpty(ViewBag.SqlUpdate)){
+    <div style="color: green"><pre>@ViewBag.SqlUpdate</pre></div>
+}
+
+<div style="width: auto">
+@(Html.jqGrid("ICXINVProductos2110Grid")                                        
+//Columns
+		.addColumn(new Column("Compania")
+		 			.setLabel("Compania")
+		 			.setSortable(true)
+		 			//.setKey(true)
+		 			.setEditable(false)
+   					.setFormOptions("rowpos:99, colpos:1")
+		 			.setHidden(true))
+		 			
+        .addColumn(new Column("ICXINVProductoItemCode")
+						.setLabel("Item Code!")
+                        .setSortable(true)
+                        //.setKey(true)
+   					    .setFormOptions("rowpos:1, colpos:1")
+						.setEditable(true)
+                        .setEditOptions(@"size:18,maxlength:18,")
+                        .setEditRules("required: true")
+						.setSearchOptions("sopt:['cn','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','cn','nc']")                         
+   					    .setWidth(180))
+
+        .addColumn(new Column("ICXINVProductoDescripcion")
+						.setLabel("Descripcion:")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:2, colpos:1")
+						.setEditable(true)
+                        .setEditOptions(@"size:86,maxlength:90,")
+                        .setEditRules("required: true")
+						.setSearchOptions("sopt:['cn','eq','ne','lt','le','gt','ge','bw','bn','in','ni','ew','en','cn','nc']")                         
+   					    .setWidth(400))
+
+        .addColumn(new Column("ICXINVProductoExistencias")
+						.setLabel("Existencias=")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:3, colpos:1")
+						.setEditable(true)
+                        .setEditOptions(@"
+										readonly:true, ")
+                        .setEditRules("integer:true, required: false")
+						.setAlign(Align.right)
+                        .setEditType(EditType.text)
+						.setSearchOptions("sopt:['eq','ne','lt','le','gt','ge'] ")
+						.setWidth(10))
+
+        .addColumn(new Column("ICXINVProductoCosto")
+						.setLabel("Costo=")
+                        .setSortable(true)
+   					    .setFormOptions("rowpos:3, colpos:2")
+						.setEditable(true)
+                        .setEditOptions(@"dataInit: function (element) { $(element).number(true, 2); },
+                                        style:'text-align: right', 
+										readonly:true, 
+										defaultValue: function() { return 0.0; },")
+                        .setEditRules("number:true, required: false")
+						.setAlign(Align.right)
+						.setFormatter(Formatters.currency, "decimalSeparator:'.', thousandsSeparator: ',', decimalPlaces: 2, prefix: '$ '")
+                        .setEditType(EditType.text)
+                        .setSearchOptions("sopt:['eq','ne','lt','le','gt','ge'] ")
+						.setWidth(130))
+
+         .addColumn(new Column("Fecha_Impresion")
+                                .setLabel("Fecha_Impresion")
+                                .setSortable(true)
+                                .setEditable(false)
+            					.setSearchType(SearchType.datepicker)
+                                .setSearchDateFormat("yy-mm-dd H:i:s")
+                                .setDateFmt("Y-m-d H:i:s")
+                                .setFormatOptions("srcformat: 'ISO8601Long', newformat: 'Y-m-d H:i:s'")
+                                .setFormatter(Formatters.date)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+                                
+         .addColumn(new Column("Fecha_Reimpresion")
+                                .setLabel("Fecha_Reimpresion")
+                                .setSortable(true)
+                                .setEditable(false)
+            					.setSearchType(SearchType.datepicker)
+                                .setSearchDateFormat("yy-mm-dd H:i:s")
+                                .setDateFmt("Y-m-d H:i:s")
+                                .setFormatOptions("srcformat: 'ISO8601Long', newformat: 'y-m-d H:i:s'")
+                                .setFormatter(Formatters.date)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+                                
+          .addColumn(new Column("Fuente")
+		 			.setLabel("Fuente")
+		 			.setSortable(true)
+		 			.setEditable(false)
+		 			.setWidth(100))
+		 			
+          .addColumn(new Column("FuenteImport")
+		 			.setLabel("Import")
+		 			.setSortable(true)
+		 			.setEditable(false)
+		 			.setWidth(100))
+		 			
+ 		.addColumn(new Column("Proceso")
+		 			.setLabel("Proceso")
+		 			.setSortable(true)
+		 			.setEditable(false)
+   					.setFormOptions("rowpos:99, colpos:1")
+		 			.setHidden(true))
+		 			
+         .addColumn(new Column("Fecha_Computador")
+                                .setLabel("Fecha Computador")
+                                .setSortable(true)
+                                .setEditable(false)
+            					.setSearchType(SearchType.datepicker)
+                                .setSearchDateFormat("yy-mm-dd H:i:s")
+                                .setDateFmt("Y-m-d H:i:s")
+                                .setFormatOptions("srcformat: 'ISO8601Long', newformat: 'y-m-d H:i:s'")
+                                .setFormatter(Formatters.date)
+                                .setWidth(150))
+        
+         .addColumn(new Column("Usuario")
+                                .setLabel("Usuario")
+                                .setSortable(true)
+                                .setEditable(false)
+                                .setWidth(150))
+
+         .addColumn(new Column("Timestamp")
+                                .setLabel("Timestamp")
+                                .setSortable(true)
+                                .setEditable(false)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+
+         .addColumn(new Column("Secuencia")
+                                .setLabel("Secuencia")
+                                .setSortable(true)
+                                .setEditable(false)
+                                .setWidth(150)
+   					    		.setFormOptions("rowpos:99, colpos:1")
+                                .setHidden(true))
+
+        // settings
+    	.setRequestType(RequestType.post)
+    	.setCaption("Productos.ICXINV")
+        .setUrl(Url.Action("Search", "ICXINV_Productos_2110_ICXBOG"))
+        .setEditUrl(Url.Action("CRUD", "ICXINV_Productos_2110_ICXBOG"))
+        .setRowNum(10)
+	    .setRowList(new[] { 10, 15, 20, 50 })
+	    .setViewRecords(true)
+	    .setPager("pager_ICXINV_Productos2110")
+	    .setSearchToolbar(true)
+        .setSearchOperators(true)
+	    .setSearchOnEnter(false)     
+        .setAutoWidth(true)
+        .setShrinkToFit(false)
+        .setPgButtons(true)
+        .setNavAdd(true)
+        .setNavSearch(true)
+        .setPrint(true)
+        .setExcelExport(Url.Action("Excel", "ICXINV_Productos_2110_ICXBOG"))
+        .setPDFExport(Url.Action("PDF", "ICXINV_Productos_2110_ICXBOG"))
+        .setAltRows(true)
+        .setAltClass("myAltRowClass")
+        .setEditDialogOptions(@"editCaption: 'Modificar Productos.ICXINV', 
+        						width:900,
+        						recreateForm:true,
+                                beforeShowForm: beforeShowForm_ICXINVProductos2110"
+        )
+        .setAddDialogOptions(@"addCaption: 'Nuevo Productos.ICXINV',
+        					 	width:900,
+        					 	recreateForm:true,
+                                beforeShowForm: beforeShowForm_ICXINVProductos2110"
+        )
+        .setSearchDialogOptions(@"closeOnEscape: true, 
+        						multipleSearch: true, 
+        						closeAfterSearch: true")        						
+
+        // render the html
+        .Render()
+)
+</div>
